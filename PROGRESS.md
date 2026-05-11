@@ -48,9 +48,10 @@
 **Objective**: Increase test coverage from 11 basic tests to comprehensive suite
 
 ### Results
-- **416 tests** across ~150 test sets (up from 11)
-- Test file grew from 50 lines to **1836 lines** (plus 21 test fixture files)
+- **588 tests** across 20 test files (up from 11)
+- Test suite split into 20 subfiles in test/testfiles/
 - Covers all domain types, agents, simulation, edge cases, and integration tests
+- Additional edge cases: PowerLimits cross_max, get_useful_power error paths, SocPowerTable lookup, TimeRange intersection/containment, VehicleState with losses, SimulationState integration
 
 ### Test Coverage
 - TimeRange (intersection, in, generate_periods, generate_timepoints)

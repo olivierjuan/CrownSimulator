@@ -1,5 +1,6 @@
 using Test
 using Dates
+using Interpolations
 
 @testset "DroopController - construction" begin
     controller = DroopController()
