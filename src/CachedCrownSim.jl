@@ -45,6 +45,7 @@ export CapacityRequirement, BiddingService
 export DroopControlData, DroopControlResponse, DroopControlResponseSummary, DroopController
 export Aggregator
 export SpotState, NetworkStateContainer
+export VehicleState, EvseState, SiteState
 export SimulationConfig, OutputConfig, DatapointsOutputConfig
 export SimulationState, run_simulation
 export validate_config, merge_defaults
