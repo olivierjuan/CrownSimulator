@@ -19,7 +19,7 @@ end
 
 Construct a `NetworkStateContainer` with default frequency (50.0 Hz) and NORMAL state.
 """
-NetworkStateContainer(id::String) = NetworkStateContainer(id, 50.0, NetworkState.NORMAL)
+NetworkStateContainer(id::String) = NetworkStateContainer(id, 50.0, NORMAL)
 
 """
     register!(n::NetworkStateContainer, context) -> Nothing

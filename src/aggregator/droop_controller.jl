@@ -73,9 +73,9 @@ function DroopController()
     mean_f = 50.0
     delta_fmax = 0.200
     delta_f0 = 0.00
-    xs = [0.0, mean_f - delta_fmax, mean_f - delta_f0, mean_f + delta_f0, mean_f + delta_fmax, Inf]
-    ys = [-1.0, -1.0, 0.0, 0.0, 1.0, 1.0]
-    interp = interpolate(xs, ys, GriddedLinear(BC()))
+    xs = [0.0, mean_f - delta_fmax, mean_f + delta_fmax, 100.0]
+    ys = [-1.0, -1.0, 1.0, 1.0]
+    interp = interpolate((xs,), ys, Gridded(Linear()))
     DroopController(interp)
 end
 

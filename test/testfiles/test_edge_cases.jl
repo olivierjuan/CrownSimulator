@@ -3,9 +3,7 @@ using Dates
 
 @testset "PowerLimits - negative power values" begin
     se = PowerLimits(max_charge_power=-1.0, min_charge_power=-5.0)
-    crossed = cross_max_and_min_charge_power(se, -2.0, -3.0)
-    @test crossed.max_charge_power == -2.0
-    @test crossed.min_charge_power == -3.0
+    @test_throws ArgumentError cross_max_and_min_charge_power(se, -2.0, -3.0)
 end
 
 @testset "PowerLimits - equal values" begin
@@ -30,7 +28,7 @@ end
 end
 
 @testset "SocPowerTable - empty" begin
-    table = SocPowerTable(items=SocPowerTableItem[])
+    table = SocPowerTable(SocPowerTableItem[])
     dtos = to_dto(table; capacity=60.0)
     @test isempty(dtos)
 end
@@ -43,7 +41,7 @@ end
 
 @testset "TimeRange - zero-length" begin
     tr = TimeRange(DateTime(2022,1,1), DateTime(2022,1,1))
-    @test DateTime(2022,1,1) in tr === false
+    @test (DateTime(2022,1,1) in tr) === false
 end
 
 @testset "TimeRange - very short range" begin

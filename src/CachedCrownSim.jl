@@ -22,6 +22,8 @@ using Dates
 using ConcurrentSim
 using ResumableFunctions
 using StructArrays
+using Interpolations
+using Interpolations
 
 # Type alias exports
 export Energy_kWh, Power_kW, Power_W, Ratio, Frequency_Hz, EnergyPrice_MWh, EnergyConsumption_Wh_minute

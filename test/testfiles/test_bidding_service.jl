@@ -15,9 +15,9 @@ end
 
 @testset "CapacityRequirement - narrow" begin
     cr = CapacityRequirement(
-        period=TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
-        capacity_up=10.0,
-        capacity_down=8.0,
+        TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
+        10.0,
+        8.0,
     )
     narrowed = narrow(cr, DateTime(2022,1,1,6), DateTime(2022,1,1,10))
     @test narrowed.period.from == DateTime(2022,1,1,6)
@@ -28,9 +28,9 @@ end
 
 @testset "CapacityRequirement - narrow partial overlap" begin
     cr = CapacityRequirement(
-        period=TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
-        capacity_up=10.0,
-        capacity_down=8.0,
+        TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
+        10.0,
+        8.0,
     )
     narrowed = narrow(cr, DateTime(2022,1,1,6), DateTime(2022,1,1,18))
     @test narrowed.period.from == DateTime(2022,1,1,6)
@@ -39,9 +39,9 @@ end
 
 @testset "CapacityRequirement - narrow full overlap" begin
     cr = CapacityRequirement(
-        period=TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
-        capacity_up=10.0,
-        capacity_down=8.0,
+        TimeRange(DateTime(2022,1,1,0), DateTime(2022,1,1,12)),
+        10.0,
+        8.0,
     )
     narrowed = narrow(cr, DateTime(2022,1,1,0), DateTime(2022,1,1,12))
     @test narrowed.period.from == DateTime(2022,1,1,0)

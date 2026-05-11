@@ -77,9 +77,8 @@ end
         max_charge_power=22.0,
     )
     es = EvseState(
-        id_="evse_1", site_id="s1", model=model, vehicle_id=nothing,
-        baseline=0.0, power=0.0, primary_capacity=0, primary_activated=0,
-        primary_capacity_up=0, primary_capacity_down=0,
+        "evse_1", "s1", model, nothing,
+        0.0, 0.0, 0, 0, 0, 0,
     )
     @test es.id_ == "evse_1"
     @test es.vehicle_id === nothing
@@ -87,7 +86,7 @@ end
 end
 
 @testset "SiteState creation" begin
-    ss = SiteState(id_="site_1", delivery_point=nothing, customer_tariffs=TimestampedPrice[], evses_ids=EvseId[])
+    ss = SiteState("site_1", nothing, TimestampedPrice[], EvseId[])
     @test ss.id_ == "site_1"
     @test ss.delivery_point === nothing
     @test isempty(ss.evses_ids)
