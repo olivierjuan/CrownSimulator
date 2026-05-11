@@ -22,6 +22,10 @@ using Dates
 using ConcurrentSim
 using ResumableFunctions
 
+# Type alias exports
+export Energy_kWh, Power_kW, Power_W, Ratio, Frequency_Hz, EnergyPrice_MWh, EnergyConsumption_Wh_minute
+export VehicleId, EvseId, SiteId, TransactionId, SpotMarketAccessId
+
 # Domain exports
 export TimeRange, Datapoint, OptimizationHorizon
 export generate_timepoints, generate_periods
