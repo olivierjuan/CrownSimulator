@@ -2,15 +2,15 @@ using Test
 using Dates
 
 @testset "TimestampedPrice - to_dto" begin
-    price = TimestampedPrice(timestamp=DateTime(2022,1,1), value=50.0)
+    price = TimestampedPrice(DateTime(2022,1,1), 50.0)
     dto = to_dto(price)
     @test dto["from"] == DateTime(2022,1,1)
     @test dto["price"] == 50.0
 end
 
 @testset "TimestampedPrices - constructor sorts" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,2), value=2.0)
-    p2 = TimestampedPrice(timestamp=DateTime(2022,1,1), value=1.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,2), 2.0)
+    p2 = TimestampedPrice(DateTime(2022,1,1), 1.0)
     prices = TimestampedPrices([p1, p2])
     @test prices.all[1].value == 1.0
     @test prices.all[2].value == 2.0
@@ -24,9 +24,9 @@ end
 end
 
 @testset "TimestampedPrices - update!" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,0), value=1.0)
-    p2 = TimestampedPrice(timestamp=DateTime(2022,1,1,1), value=2.0)
-    p3 = TimestampedPrice(timestamp=DateTime(2022,1,1,2), value=3.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,0), 1.0)
+    p2 = TimestampedPrice(DateTime(2022,1,1,1), 2.0)
+    p3 = TimestampedPrice(DateTime(2022,1,1,2), 3.0)
     prices = TimestampedPrices([p1, p2, p3])
 
     dp = Datapoint(
@@ -45,7 +45,7 @@ end
 end
 
 @testset "TimestampedPrices - update! no future prices" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,0), value=1.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,0), 1.0)
     prices = TimestampedPrices([p1])
 
     dp = Datapoint(

@@ -50,19 +50,19 @@ end
     nsc = NetworkStateContainer("net_1")
     @test nsc.id_ == "net_1"
     @test nsc.frequency == 50.0
-    @test nsc.state == NetworkState.NORMAL
+    @test nsc.state == NORMAL
 end
 
 @testset "NetworkStateContainer - full constructor" begin
-    nsc = NetworkStateContainer("net_1", 49.9, NetworkState.ALERT)
+    nsc = NetworkStateContainer("net_1", 49.9, ALERT)
     @test nsc.id_ == "net_1"
     @test nsc.frequency == 49.9
-    @test nsc.state == NetworkState.ALERT
+    @test nsc.state == ALERT
 end
 
 @testset "SpotState - default constructor" begin
     ss = SpotState("spot_1")
-    @test ss.id == "spot_1"
+    @test ss.id_ == "spot_1"
     @test isempty(ss.day_ahead_prices)
 end
 

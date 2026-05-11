@@ -55,9 +55,9 @@ end
 end
 
 @testset "ElectricNetworkSnapshot" begin
-    ens = ElectricNetworkSnapshot(frequency=50.0, state=NetworkState.NORMAL)
+    ens = ElectricNetworkSnapshot(frequency=50.0, state=NORMAL)
     @test ens.frequency == 50.0
-    @test ens.state == NetworkState.NORMAL
+    @test ens.state == NORMAL
 end
 
 @testset "SpotSnapshot" begin
@@ -138,10 +138,10 @@ end
         sites=SiteSnapshot[],
         evses=EvseSnapshot[],
         vehicles=[vs],
-        recovering_state=RecoveringMode.DEACTIVATED,
+        recovering_state=DEACTIVATED,
     )
     @test ves.timestamp == DateTime(2022,1,1)
-    @test ves.recovering_state == RecoveringMode.DEACTIVATED
+    @test ves.recovering_state == DEACTIVATED
     @test ves.announced_capacity === nothing
     @test ves.network === nothing
     @test ves.spot === nothing

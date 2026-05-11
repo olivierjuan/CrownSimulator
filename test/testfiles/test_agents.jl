@@ -55,7 +55,7 @@ end
 end
 
 @testset "TimestampedVehicleSoc" begin
-    tvs = TimestampedVehicleSoc(timestamp=DateTime(2022,1,1), value=30.0)
+    tvs = TimestampedVehicleSoc(DateTime(2022,1,1), 30.0)
     @test tvs.timestamp == DateTime(2022,1,1)
     @test tvs.value == 30.0
 end

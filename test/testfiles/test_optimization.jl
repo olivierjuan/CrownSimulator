@@ -39,7 +39,7 @@ end
 end
 
 @testset "OptimizationRequestGenerator - next_request_id!" begin
-    gen = OptimizationRequestGenerator(id=0, services=ServicesRequestParameters(
+    gen = OptimizationRequestGenerator(0, ServicesRequestParameters(
         charging_requirements=ChargingRequirementsServiceParameters(
             weight=0.5,
             soc_penalties=SocPenalties(encouraged_min_soc_gap=5, encouraged_max_soc_gap=20, max_soc_gap=50),

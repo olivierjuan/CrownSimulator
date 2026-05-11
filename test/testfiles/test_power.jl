@@ -106,12 +106,10 @@ end
 end
 
 @testset "SocPowerTable - to_dto" begin
-    table = SocPowerTable(
-        items=[
-            SocPowerTableItem(soc=20, power=7.0),
-            SocPowerTableItem(soc=80, power=22.0),
-        ]
-    )
+    table = SocPowerTable([
+        SocPowerTableItem(soc=20, power=7.0),
+        SocPowerTableItem(soc=80, power=22.0),
+    ])
     dtos = to_dto(table; capacity=60.0)
     @test length(dtos) == 2
     @test dtos[1]["maxChargePower"] == Int(round(7.0 * 1000.0))

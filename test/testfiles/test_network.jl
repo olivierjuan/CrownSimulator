@@ -2,16 +2,16 @@ using Test
 using Dates
 
 @testset "NetworkState enum" begin
-    @test NetworkState.NORMAL == 0
-    @test NetworkState.ALERT == 1
-    @test NetworkState.EMERGENCY == 2
+    @test Int(NORMAL) == 0
+    @test Int(ALERT) == 1
+    @test Int(EMERGENCY) == 2
 end
 
 @testset "RecoveringMode enum" begin
-    @test RecoveringMode.DEACTIVATED == 0
-    @test RecoveringMode.ARMED == 1
-    @test RecoveringMode.ACTIVATED == 2
-    @test RecoveringMode.DEACTIVATING == 3
+    @test Int(DEACTIVATED) == 0
+    @test Int(ARMED) == 1
+    @test Int(ACTIVATED) == 2
+    @test Int(DEACTIVATING) == 3
 end
 
 @testset "FrequencyRange - to_dto" begin
