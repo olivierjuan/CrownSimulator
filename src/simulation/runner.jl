@@ -92,17 +92,17 @@ simulation time in 1-minute steps until the horizon is reached or `state.stop` i
     while !state.stop && now(sim) < last_sim_time + 3600.0 # 1 hour horizon
         @yield timeout(sim, Minute(1))
         current_sim_time = now(sim)
-        delta_t = current_sim_time - last_sim_time
+        delta_t_seconds = Dates.value(Millisecond(current_sim_time - last_sim_time)) / 1000.0
         last_sim_time = current_sim_time
         state.current_time += Minute(1)
         # Vectorized batch update of connected SoC and EVSE states
-        batch_vehicle_soc_update!(state.vehicles, delta_t)
+        batch_vehicle_soc_update!(state.vehicles, delta_t_seconds)
         for evse in state.evses
-            update!(evse, delta_t, state.current_time)
+            update!(evse, delta_t_seconds, state.current_time)
         end
-        update!(state.site, delta_t, state.current_time)
-        update!(state.network, delta_t, state.current_time)
-        update!(state.spot, delta_t, state.current_time)
+        update!(state.site, delta_t_seconds, state.current_time)
+        update!(state.network, delta_t_seconds, state.current_time)
+        update!(state.spot, delta_t_seconds, state.current_time)
     end
 end
 
