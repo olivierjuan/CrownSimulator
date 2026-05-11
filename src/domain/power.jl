@@ -48,6 +48,15 @@ get_useful_power(losses, 10.0)  # 9.025
 ```
 """
 function get_useful_power(losses::PowerLosses, power::Power_kW)::Power_kW
+    if isnan(power) || isinf(power)
+        throw(ArgumentError("Power value must be finite, got $power"))
+    end
+    if losses.variable.charging < 0.0 || losses.variable.charging >= 1.0
+        throw(ArgumentError("Charging loss ratio must be in [0, 1), got $(losses.variable.charging)"))
+    end
+    if losses.variable.discharging < 0.0 || losses.variable.discharging >= 1.0
+        throw(ArgumentError("Discharging loss ratio must be in [0, 1), got $(losses.variable.discharging)"))
+    end
     power -= losses.standby
     if isapprox(power, 0.0; atol=1e-9)
         power = 0.0
@@ -99,6 +108,15 @@ function cross_max_and_min_charge_power(
     ev_power_max::Power_kW,
     ev_power_min::Power_kW,
 )::PowerLimits
+    if ev_power_max < 0.0
+        throw(ArgumentError("ev_power_max must be non-negative, got $ev_power_max"))
+    end
+    if ev_power_min < 0.0
+        throw(ArgumentError("ev_power_min must be non-negative, got $ev_power_min"))
+    end
+    if ev_power_min > ev_power_max
+        throw(ArgumentError("ev_power_min ($ev_power_min) must not exceed ev_power_max ($ev_power_max)"))
+    end
     crossed_max = ev_power_max < self.max_charge_power ? ev_power_max : self.max_charge_power
     crossed_min = ev_power_min > self.min_charge_power ? ev_power_min : self.min_charge_power
     PowerLimits(
@@ -159,12 +177,44 @@ end
     SocPowerTable
 
 A table of SoC-to-power mappings, used to determine maximum charging power at a given SoC level.
+Includes an internal cache for fast lookups.
 
 # Fields
 - `items::Vector{SocPowerTableItem}` — Ordered list of SoC power table entries.
+- `_cache::Dict{Int,Power_kW}` — Cached SoC-to-power mapping for fast lookups.
 """
-Base.@kwdef struct SocPowerTable
+struct SocPowerTable
     items::Vector{SocPowerTableItem}
+    _cache::Dict{Int,Power_kW}
+
+    function SocPowerTable(items::Vector{SocPowerTableItem})
+        cache = Dict{Int,Power_kW}()
+        for item in items
+            cache[item.soc] = item.power
+        end
+        new(items, cache)
+    end
+end
+
+"""
+    lookup_power(table::SocPowerTable, soc::Int) -> Power_kW
+
+Look up the maximum power for a given SoC percentage using the cached table.
+Falls back to the nearest lower SoC entry if exact match is not found.
+"""
+function lookup_power(table::SocPowerTable, soc::Int)::Power_kW
+    if haskey(table._cache, soc)
+        return table._cache[soc]
+    end
+    best_soc = 0
+    best_power = 0.0
+    for (s, p) in table._cache
+        if s <= soc && s > best_soc
+            best_soc = s
+            best_power = p
+        end
+    end
+    return best_power
 end
 
 """
@@ -182,7 +232,6 @@ end
 Construct a `SocPowerTable` from a vector of configuration dictionaries.
 """
 function from_config(::Type{SocPowerTable}, cfg::Vector{<:AbstractDict})::SocPowerTable
-    SocPowerTable(
-        items=[from_config(SocPowerTableItem, item) for item in cfg],
-    )
+    items = [from_config(SocPowerTableItem, item) for item in cfg]
+    SocPowerTable(items)
 end

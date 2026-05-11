@@ -28,12 +28,14 @@ export generate_timepoints, generate_periods
 export PowerLosses, VariablePowerLosses, PowerLimits, SocPowerTable, SocPowerTableItem
 export get_useful_power, cross_max_and_min_charge_power
 export TimestampedPrice, TimestampedPrices
-export NetworkState, RecoveringMode, FrequencyRange, FrequencyActivationMapping, FrequencyActivationTable, FrequencyQualityDefiningParams
+export NetworkState, NORMAL, ALERT, EMERGENCY
+export RecoveringMode, DEACTIVATED, ARMED, ACTIVATED, DEACTIVATING
+export FrequencyRange, FrequencyActivationMapping, FrequencyActivationTable, FrequencyQualityDefiningParams
 export ServicesRequestParameters, SocPenalties, InstantChargePenalties, ChargingRequirementsServiceParameters, TariffServiceParameters, FcrServiceParameters, BaselineStabilityServiceParameters, Co2ServiceParameters, DayAheadServiceParameters
-export CurrentType, EvseModel
+export CurrentType, AC, DC, EvseModel
 export VehicleModel
 export VehicleTrip, FutureTransactionSeed
-export DeliveryPoint, DeliveryPointCircuit, CircuitEvse, CircuitPowerLimits, OtherLoad, OtherConsumption, OtherProduction
+export DeliveryPoint, DeliveryPointCircuit, CircuitEvse, CircuitPowerLimits, OtherConsumption, OtherProduction
 export EvseAgentRegistration, VehicleAgentRegistration, SiteAgentRegistration, NetworkAgentRegistration, SpotAgentRegistration
 export EvseSetDataRequest, VehicleSetDataRequest, TimestampedVehicleSoc
 export FcrSummary, Transaction, OptimizationResponseSummary, AbstractCapacityRequirement
@@ -45,6 +47,15 @@ export Aggregator
 export SpotState, NetworkStateContainer
 export SimulationConfig, OutputConfig, DatapointsOutputConfig
 export SimulationState, run_simulation
+export validate_config, merge_defaults
+
+# Function exports
+export to_dto, load, from_config, from_dto, read_from_csv
+export capacity, margin, dead_zone, max_steady_state_deviation, plus
+export is_fcr_enabled, narrow, has_day_ahead_prices, has_customer_tariffs
+export peek_next_event, discard_next_event!
+export compute_vehicle_soc_update, batch_vehicle_soc_update!
+export next_request_id!, power_limits, control
 
 # Abstract agent interface exports
 export AbstractAgent, AbstractVehicleAgent, AbstractEvseAgent, AbstractSiteAgent, AbstractNetworkAgent, AbstractSpotAgent

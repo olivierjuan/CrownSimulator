@@ -33,7 +33,7 @@ Collection of timestamped energy prices, split into all prices and current price
 - `all::Vector{TimestampedPrice}` — All prices (sorted by timestamp).
 - `current::Vector{TimestampedPrice}` — Prices applicable to the current timestep.
 """
-struct TimestampedPrices
+mutable struct TimestampedPrices
     all::Vector{TimestampedPrice}
     current::Vector{TimestampedPrice}
 end

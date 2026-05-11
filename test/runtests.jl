@@ -124,11 +124,7 @@ end
 # =============================================================================
 
 @testset "OptimizationHorizon" begin
-    oh = OptimizationHorizon(
-        start=DateTime(2022,1,1),
-        stop=DateTime(2022,1,2),
-        period_duration=Hour(1)
-    )
+    oh = OptimizationHorizon(DateTime(2022,1,1), DateTime(2022,1,2), Hour(1))
     @test oh.start == DateTime(2022,1,1)
     @test oh.stop == DateTime(2022,1,2)
     @test oh.period_duration == Hour(1)
@@ -284,15 +280,15 @@ end
 # =============================================================================
 
 @testset "TimestampedPrice - to_dto" begin
-    price = TimestampedPrice(timestamp=DateTime(2022,1,1), value=50.0)
+    price = TimestampedPrice(DateTime(2022,1,1), 50.0)
     dto = to_dto(price)
     @test dto["from"] == DateTime(2022,1,1)
     @test dto["price"] == 50.0
 end
 
 @testset "TimestampedPrices - constructor sorts" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,2), value=2.0)
-    p2 = TimestampedPrice(timestamp=DateTime(2022,1,1), value=1.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,2), 2.0)
+    p2 = TimestampedPrice(DateTime(2022,1,1), 1.0)
     prices = TimestampedPrices([p1, p2])
     @test prices.all[1].value == 1.0
     @test prices.all[2].value == 2.0
@@ -306,9 +302,9 @@ end
 end
 
 @testset "TimestampedPrices - update!" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,0), value=1.0)
-    p2 = TimestampedPrice(timestamp=DateTime(2022,1,1,1), value=2.0)
-    p3 = TimestampedPrice(timestamp=DateTime(2022,1,1,2), value=3.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,0), 1.0)
+    p2 = TimestampedPrice(DateTime(2022,1,1,1), 2.0)
+    p3 = TimestampedPrice(DateTime(2022,1,1,2), 3.0)
     prices = TimestampedPrices([p1, p2, p3])
 
     dp = Datapoint(
@@ -329,7 +325,7 @@ end
 end
 
 @testset "TimestampedPrices - update! no future prices" begin
-    p1 = TimestampedPrice(timestamp=DateTime(2022,1,1,0), value=1.0)
+    p1 = TimestampedPrice(DateTime(2022,1,1,0), 1.0)
     prices = TimestampedPrices([p1])
 
     dp = Datapoint(
@@ -359,16 +355,16 @@ end
 # =============================================================================
 
 @testset "NetworkState enum" begin
-    @test NetworkState.NORMAL == 0
-    @test NetworkState.ALERT == 1
-    @test NetworkState.EMERGENCY == 2
+    @test Int(NORMAL) == 0
+    @test Int(ALERT) == 1
+    @test Int(EMERGENCY) == 2
 end
 
 @testset "RecoveringMode enum" begin
-    @test RecoveringMode.DEACTIVATED == 0
-    @test RecoveringMode.ARMED == 1
-    @test RecoveringMode.ACTIVATED == 2
-    @test RecoveringMode.DEACTIVATING == 3
+    @test Int(DEACTIVATED) == 0
+    @test Int(ARMED) == 1
+    @test Int(ACTIVATED) == 2
+    @test Int(DEACTIVATING) == 3
 end
 
 @testset "FrequencyRange - to_dto" begin
@@ -1019,7 +1015,7 @@ end
 end
 
 @testset "TimestampedVehicleSoc" begin
-    tvs = TimestampedVehicleSoc(timestamp=DateTime(2022,1,1), value=30.0)
+    tvs = TimestampedVehicleSoc(DateTime(2022,1,1), 30.0)
     @test tvs.timestamp == DateTime(2022,1,1)
     @test tvs.value == 30.0
 end
@@ -1078,7 +1074,7 @@ end
         max_dc_charge_power=50.0,
         max_charge_power_max_soc=0.5,
         soc=30.0,
-        soc_requirements=Energy_kWh[],
+        soc_requirements=Float64[],
     )
     @test vs.id_ == "v1"
     @test vs.soc == 30.0
@@ -1097,7 +1093,7 @@ end
         max_dc_charge_power=50.0,
         max_charge_power_max_soc=0.0,
         soc=30.0,
-        soc_requirements=Energy_kWh[],
+        soc_requirements=Float64[],
     )
     ts = TransactionSnapshot(
         id_="tx_1",
@@ -1198,7 +1194,7 @@ end
     vs = VehicleSnapshot(
         id_="v1", capacity=60.0, max_soc=55.0,
         max_ac_charge_power=11.0, max_dc_charge_power=50.0,
-        max_charge_power_max_soc=0.0, soc=30.0, soc_requirements=Energy_kWh[],
+        max_charge_power_max_soc=0.0, soc=30.0, soc_requirements=Float64[],
     )
     ves = VirtualEnvironmentSnapshot(
         timestamp=DateTime(2022,1,1),

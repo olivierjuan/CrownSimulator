@@ -1,11 +1,34 @@
 using Interpolations
 
+"""
+    DroopControlData
+
+Input data for droop control computation.
+
+# Fields
+- `frequency::Frequency_Hz` — Current grid frequency in Hz.
+- `announced_capacity::Vector{CapacityRequirement}` — Announced capacity requirements.
+- `transactions::Vector{Transaction}` — Transactions to process.
+"""
 Base.@kwdef struct DroopControlData
     frequency::Frequency_Hz
     announced_capacity::Vector{CapacityRequirement}
     transactions::Vector{Transaction}
 end
 
+"""
+    DroopControlResponseSummary
+
+Summary of droop control response totals.
+
+# Fields
+- `total_power::Power_kW` — Total power in kW.
+- `total_baseline::Power_kW` — Total baseline power in kW.
+- `total_activated::Power_kW` — Total activated power in kW.
+- `total_capacity_up::Power_kW` — Total capacity up in kW.
+- `total_capacity_down::Power_kW` — Total capacity down in kW.
+- `total_discharge::Power_kW` — Total discharge in kW.
+"""
 Base.@kwdef struct DroopControlResponseSummary
     total_power::Power_kW = 0.0
     total_baseline::Power_kW = 0.0
@@ -15,15 +38,37 @@ Base.@kwdef struct DroopControlResponseSummary
     total_discharge::Power_kW = 0.0
 end
 
+"""
+    DroopControlResponse
+
+Response from droop control computation.
+
+# Fields
+- `transactions::Vector{Transaction}` — Updated transactions.
+- `summary::DroopControlResponseSummary` — Summary of the response.
+"""
 Base.@kwdef struct DroopControlResponse
     transactions::Vector{Transaction}
     summary::DroopControlResponseSummary
 end
 
+"""
+    DroopController
+
+Droop controller for frequency containment reserve (FCR) control.
+
+# Fields
+- `interp::Interpolations.GriddedInterpolation` — Interpolation function for frequency-to-coefficient mapping.
+"""
 struct DroopController
     interp::Interpolations.GriddedInterpolation
 end
 
+"""
+    DroopController() -> DroopController
+
+Construct a default droop controller with standard frequency response parameters.
+"""
 function DroopController()
     mean_f = 50.0
     delta_fmax = 0.200
@@ -34,6 +79,19 @@ function DroopController()
     DroopController(interp)
 end
 
+"""
+    control(controller::DroopController, data::DroopControlData) -> DroopControlResponse
+
+Compute the droop control response for the given frequency and transactions.
+Uses pre-allocated vectors for performance.
+
+# Arguments
+- `controller::DroopController` — The droop controller.
+- `data::DroopControlData` — Input data with frequency and transactions.
+
+# Returns
+- A `DroopControlResponse` with updated transactions and summary.
+"""
 function control(controller::DroopController, data::DroopControlData)::DroopControlResponse
     coeff = controller.interp(data.frequency)
     coeff_plus = max(coeff, 0.0)
@@ -44,7 +102,9 @@ function control(controller::DroopController, data::DroopControlData)::DroopCont
     total_capacity_up = 0.0
     total_capacity_down = 0.0
     total_discharge = 0.0
-    out_transactions = Transaction[]
+    # Pre-allocate output vector
+    out_transactions = Vector{Transaction}(undef, length(data.transactions))
+    idx = 0
     for tx in data.transactions
         if tx.managed
             fcr_down = tx.transaction_fcr_summary.capacity_down
@@ -73,7 +133,8 @@ function control(controller::DroopController, data::DroopControlData)::DroopCont
             if new_tx.power < 0.0
                 total_discharge += -new_tx.power
             end
-            push!(out_transactions, new_tx)
+            idx += 1
+            out_transactions[idx] = new_tx
         else
             new_tx = Transaction(
                 id=tx.id,
@@ -86,9 +147,12 @@ function control(controller::DroopController, data::DroopControlData)::DroopCont
             )
             total_baseline += new_tx.baseline
             total_power += new_tx.power
-            push!(out_transactions, new_tx)
+            idx += 1
+            out_transactions[idx] = new_tx
         end
     end
+    # Trim vector to actual length
+    resize!(out_transactions, idx)
     DroopControlResponse(
         transactions=out_transactions,
         summary=DroopControlResponseSummary(

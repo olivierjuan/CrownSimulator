@@ -100,12 +100,11 @@ Base.@kwdef struct FrequencyActivationTable
 end
 
 """
-    load(::Type{FrequencyActivationTable}, cfg::AbstractDict) -> FrequencyActivationTable
+    load(::Type{FrequencyActivationTable}, cfg::Union{AbstractDict,AbstractVector}) -> FrequencyActivationTable
 
 Construct a `FrequencyActivationTable` from a configuration dictionary or vector.
 """
-function load(::Type{FrequencyActivationTable}, cfg::AbstractDict)
-    # Iterate over keys of cfg similarly as in list index; cfg keys like "0", "1" or array-like
+function load(::Type{FrequencyActivationTable}, cfg::Union{AbstractDict,AbstractVector})
     if isa(cfg, AbstractVector)
         return FrequencyActivationTable([load(FrequencyActivationMapping, cfg[i]) for i in eachindex(cfg)])
     else
