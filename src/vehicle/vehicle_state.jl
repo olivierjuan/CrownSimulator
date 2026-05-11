@@ -14,7 +14,7 @@ Mutable state for a vehicle (EV) in the simulation. Implements `AbstractVehicleA
 - `connected::Bool` — Whether the vehicle is connected to an EVSE.
 - `evse_id::Union{EvseId,Nothing}` — Identifier of the connected EVSE (if any).
 """
-mutable struct VehicleState <: AbstractVehicleAgent
+Base.@kwdef mutable struct VehicleState <: AbstractVehicleAgent
     id_::VehicleId
     site_id::SiteId
     model::VehicleModel
