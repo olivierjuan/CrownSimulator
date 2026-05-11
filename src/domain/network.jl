@@ -69,6 +69,9 @@ end
 Construct a `FrequencyActivationMapping` from a configuration dictionary.
 """
 function load(::Type{FrequencyActivationMapping}, cfg::AbstractDict)
+    for key in ("frequency", "activation")
+        haskey(cfg, key) || throw(ArgumentError("Missing required key '$key' in FrequencyActivationMapping config"))
+    end
     FrequencyActivationMapping(
         frequency=cfg["frequency"],
         activation=cfg["activation"],

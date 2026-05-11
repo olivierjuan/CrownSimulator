@@ -11,3 +11,16 @@ Base.@kwdef struct EnergyNeed
     period::TimeRange
     value::Float64
 end
+
+"""
+    to_dto(need::EnergyNeed) -> Dict{String,Any}
+
+Convert an `EnergyNeed` to a DTO dictionary for serialization.
+"""
+function to_dto(need::EnergyNeed)
+    Dict{String,Any}(
+        "start" => string(need.period.from),
+        "stop" => string(need.period.to),
+        "value" => need.value,
+    )
+end

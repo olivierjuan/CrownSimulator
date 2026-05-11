@@ -62,6 +62,45 @@ end
 
 # OptimizationResponseSummary depends on CapacityRequirement which is part of scenarios; placeholder type to break circular definition
 """
+    to_dto(summary::FcrSummary) -> Dict{String,Any}
+
+Convert an `FcrSummary` to a DTO dictionary for serialization.
+"""
+function to_dto(summary::FcrSummary)
+    Dict{String,Any}(
+        "capacity_up" => summary.capacity_up,
+        "capacity_down" => summary.capacity_down,
+        "margin_up" => summary.margin_up,
+        "margin_down" => summary.margin_down,
+        "activated" => summary.activated,
+    )
+end
+
+"""
+    to_dto(tx::Transaction) -> Dict{String,Any}
+
+Convert a `Transaction` to a DTO dictionary for serialization.
+"""
+function to_dto(tx::Transaction)
+    dto = Dict{String,Any}(
+        "id" => tx.id,
+        "managed" => tx.managed,
+        "baseline" => tx.baseline,
+        "power" => tx.power,
+    )
+    if tx.ev_id !== nothing
+        dto["ev_id"] = tx.ev_id
+    end
+    if tx.transaction_fcr_summary !== nothing
+        dto["fcr_summary"] = to_dto(tx.transaction_fcr_summary)
+    end
+    if tx.constant_loss !== nothing
+        dto["constant_loss"] = tx.constant_loss
+    end
+    return dto
+end
+
+"""
     AbstractCapacityRequirement
 
 Abstract supertype for capacity requirements. Used to break circular definitions between

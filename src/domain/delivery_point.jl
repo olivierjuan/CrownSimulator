@@ -96,6 +96,9 @@ Construct a `CircuitEvse` from a DTO dictionary.
 - `dto::AbstractDict` — Dictionary with keys `"evseId"`, `"phases"`, `"installedOnPhase"`, and optionally `"priority"`.
 """
 function load(::Type{CircuitEvse}, dto::AbstractDict)
+    for key in ("evseId", "phases", "installedOnPhase")
+        haskey(dto, key) || throw(ArgumentError("Missing required key '$key' in CircuitEvse DTO"))
+    end
     CircuitEvse(
         evse_id=dto["evseId"],
         phases=dto["phases"],
@@ -197,6 +200,9 @@ Construct a `DeliveryPointCircuit` from a DTO dictionary, including nested circu
 - `dto::AbstractDict` — Dictionary with keys `"id"`, `"phases"`, `"installedOnPhase"`, and optionally `"circuits"`, `"evses"`, `"powerLimits"`.
 """
 function load(::Type{DeliveryPointCircuit}, dto::AbstractDict)
+    for key in ("id", "phases", "installedOnPhase")
+        haskey(dto, key) || throw(ArgumentError("Missing required key '$key' in DeliveryPointCircuit DTO"))
+    end
     power_limits = if haskey(dto, "powerLimits") && !isempty(dto["powerLimits"])
         load(CircuitPowerLimits, dto["powerLimits"])
     else
@@ -275,6 +281,9 @@ Construct a `DeliveryPoint` from a DTO dictionary, including nested circuits and
 - `dto::AbstractDict` — Dictionary with keys `"id"`, `"phases"`, `"powerLimits"`, `"circuits"`, and optionally `"subscribedPower"`.
 """
 function load(::Type{DeliveryPoint}, dto::AbstractDict)
+    for key in ("id", "phases", "powerLimits", "circuits")
+        haskey(dto, key) || throw(ArgumentError("Missing required key '$key' in DeliveryPoint DTO"))
+    end
     subscribed_power = haskey(dto, "subscribedPower") ? load(CircuitPowerLimits, dto["subscribedPower"]) : nothing
     DeliveryPoint(
         id_=dto["id"],

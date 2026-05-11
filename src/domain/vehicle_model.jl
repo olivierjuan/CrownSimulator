@@ -29,6 +29,35 @@ Base.@kwdef struct VehicleModel
 end
 
 """
+    to_dto(model::VehicleModel) -> Dict{String,Any}
+
+Convert a `VehicleModel` to a DTO dictionary for serialization.
+
+# Returns
+- A dictionary with capacity, power limits, and optional loss parameters.
+"""
+function to_dto(model::VehicleModel)
+    dto = Dict{String,Any}(
+        "capacity" => Int(round(model.capacity * 1000.0)),
+        "minSoc" => Int(round(model.min_soc * 1000.0)),
+        "maxSoc" => Int(round(model.max_soc * 1000.0)),
+        "max_ac_charge_power" => model.max_ac_charge_power,
+        "max_dc_charge_power" => model.max_dc_charge_power,
+    )
+    if model.max_charge_power_max_soc > 0.0
+        dto["max_charge_power_max_soc"] = Int(round(model.max_charge_power_max_soc * 100.0))
+    end
+    if model.power_losses !== nothing
+        dto["standby_losses"] = model.power_losses.standby
+        dto["variable_losses"] = Dict{String,Any}(
+            "charging" => model.power_losses.variable.charging,
+            "discharging" => model.power_losses.variable.discharging,
+        )
+    end
+    return dto
+end
+
+"""
     from_config(::Type{VehicleModel}, cfg::AbstractDict) -> VehicleModel
 
 Construct a `VehicleModel` from a configuration dictionary.

@@ -155,6 +155,33 @@ Check whether a `DateTime` falls within a `TimeRange` (half-open: `from <= dt < 
 Base.in(dt::DateTime, p::TimeRange) = p.from <= dt < p.to
 
 """
+    to_dto(tr::TimeRange) -> Dict{String,Any}
+
+Convert a `TimeRange` to a DTO dictionary for serialization.
+"""
+function to_dto(tr::TimeRange)
+    Dict{String,Any}("from" => string(tr.from), "to" => string(tr.to))
+end
+
+"""
+    to_dto(dp::Datapoint) -> Dict{String,Any}
+
+Convert a `Datapoint` to a DTO dictionary for serialization.
+"""
+function to_dto(dp::Datapoint)
+    Dict{String,Any}(
+        "timestamp" => string(dp.timestamp),
+        "start" => string(dp.start_),
+        "end" => string(dp.end_),
+        "delta_t" => string(dp.delta_t),
+        "algorithm" => dp.algorithm,
+        "warmup" => dp.warmup,
+        "version" => dp.version,
+        "minimize_logs" => dp.minimize_logs,
+    )
+end
+
+"""
     Base.in(p1::TimeRange, p2::TimeRange) -> Bool
 
 Check whether a `TimeRange` is fully contained within another `TimeRange`.
@@ -234,4 +261,17 @@ struct OptimizationHorizon
     start::DateTime
     stop::DateTime
     period_duration::Dates.Period
+end
+
+"""
+    to_dto(oh::OptimizationHorizon) -> Dict{String,Any}
+
+Convert an `OptimizationHorizon` to a DTO dictionary for serialization.
+"""
+function to_dto(oh::OptimizationHorizon)
+    Dict{String,Any}(
+        "start" => string(oh.start),
+        "stop" => string(oh.stop),
+        "period_duration" => string(oh.period_duration),
+    )
 end

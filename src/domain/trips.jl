@@ -23,3 +23,24 @@ Represents a seed for a future transaction, based on a vehicle trip.
 Base.@kwdef struct FutureTransactionSeed
     trip::VehicleTrip
 end
+
+"""
+    to_dto(trip::VehicleTrip) -> Dict{String,Any}
+
+Convert a `VehicleTrip` to a DTO dictionary for serialization.
+"""
+function to_dto(trip::VehicleTrip)
+    Dict{String,Any}(
+        "start" => string(trip.start),
+        "destination" => string(trip.destination),
+    )
+end
+
+"""
+    to_dto(seed::FutureTransactionSeed) -> Dict{String,Any}
+
+Convert a `FutureTransactionSeed` to a DTO dictionary for serialization.
+"""
+function to_dto(seed::FutureTransactionSeed)
+    Dict{String,Any}("trip" => to_dto(seed.trip))
+end

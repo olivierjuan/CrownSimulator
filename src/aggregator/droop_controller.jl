@@ -39,6 +39,22 @@ Base.@kwdef struct DroopControlResponseSummary
 end
 
 """
+    to_dto(summary::DroopControlResponseSummary) -> Dict{String,Any}
+
+Convert a `DroopControlResponseSummary` to a DTO dictionary for serialization.
+"""
+function to_dto(summary::DroopControlResponseSummary)
+    Dict{String,Any}(
+        "total_power" => summary.total_power,
+        "total_baseline" => summary.total_baseline,
+        "total_activated" => summary.total_activated,
+        "total_capacity_up" => summary.total_capacity_up,
+        "total_capacity_down" => summary.total_capacity_down,
+        "total_discharge" => summary.total_discharge,
+    )
+end
+
+"""
     DroopControlResponse
 
 Response from droop control computation.
@@ -50,6 +66,18 @@ Response from droop control computation.
 Base.@kwdef struct DroopControlResponse
     transactions::Vector{Transaction}
     summary::DroopControlResponseSummary
+end
+
+"""
+    to_dto(resp::DroopControlResponse) -> Dict{String,Any}
+
+Convert a `DroopControlResponse` to a DTO dictionary for serialization.
+"""
+function to_dto(resp::DroopControlResponse)
+    Dict{String,Any}(
+        "transactions" => [to_dto(tx) for tx in resp.transactions],
+        "summary" => to_dto(resp.summary),
+    )
 end
 
 """
