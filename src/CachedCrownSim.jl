@@ -23,7 +23,6 @@ using ConcurrentSim
 using ResumableFunctions
 using StructArrays
 using Interpolations
-using Interpolations
 
 # Type alias exports
 export Energy_kWh, Power_kW, Power_W, Ratio, Frequency_Hz, EnergyPrice_MWh, EnergyConsumption_Wh_minute
@@ -33,7 +32,7 @@ export VehicleId, EvseId, SiteId, TransactionId, SpotMarketAccessId
 export TimeRange, Datapoint, OptimizationHorizon
 export generate_timepoints, generate_periods
 export PowerLosses, VariablePowerLosses, PowerLimits, SocPowerTable, SocPowerTableItem
-export get_useful_power, cross_max_and_min_charge_power
+export get_useful_power, cross_max_and_min_charge_power, lookup_power
 export TimestampedPrice, TimestampedPrices
 export NetworkState, NORMAL, ALERT, EMERGENCY
 export RecoveringMode, DEACTIVATED, ARMED, ACTIVATED, DEACTIVATING
