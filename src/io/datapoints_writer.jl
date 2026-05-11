@@ -67,4 +67,3 @@ function close_writer!(writer::SingleFileDatapointsWriter)
     end
 end
 
-# TODO: daily writer split and filename_pattern formatting should follow later requirements.

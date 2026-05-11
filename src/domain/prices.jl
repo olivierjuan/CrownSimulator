@@ -56,8 +56,7 @@ function read_from_csv(::Type{TimestampedPrices}, file::Union{String,Nothing})
     if file === nothing
         return TimestampedPrices(TimestampedPrice[])
     end
-    # TODO: replace csv reader when implementing IO utilities
-    error("CSV reading not yet implemented for TimestampedPrices")
+    error("CSV reading for TimestampedPrices is not yet implemented")
 end
 
 """

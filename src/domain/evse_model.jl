@@ -67,6 +67,30 @@ function from_config(::Type{EvseModel}, config::AbstractDict)::EvseModel
 end
 
 """
+    to_dto(model::EvseModel) -> Dict{String,Any}
+
+Convert an `EvseModel` to a DTO dictionary for serialization.
+
+# Returns
+- A dictionary with power loss parameters, power limits, current type, and V2G support flag.
+"""
+function to_dto(model::EvseModel)
+    Dict{String,Any}(
+        "standbyLosses" => Int(round(model.power_losses.standby * 1000.0)),
+        "variableLosses" => Int(round((1.0 - model.power_losses.variable.charging) * 100.0)),
+        "powerLimits" => Dict{String,Any}(
+            "maxChargePower" => Int(round(model.max_charge_power * 1000.0)),
+            "maxDischargePower" => Int(round(model.max_discharge_power * 1000.0)),
+            "minChargePower" => Int(round(model.min_charge_power * 1000.0)),
+            "efficiencyMinDischargePower" => Int(round(model.efficiency_min_discharge_power * 1000.0)),
+            "efficiencyMinChargePower" => Int(round(model.efficiency_min_charge_power * 1000.0)),
+        ),
+        "currentType" => string(model.current_type),
+        "supportsV2g" => model.supports_v2g,
+    )
+end
+
+"""
     power_limits(model::EvseModel) -> PowerLimits
 
 Extract power limits from an `EvseModel` into a `PowerLimits` struct.

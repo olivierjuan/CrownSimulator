@@ -28,4 +28,4 @@ function next_request_id!(gen::OptimizationRequestGenerator)::Int
     gen.id
 end
 
-# TODO: complete request generation snapshot-to-request logic once solver DTO shape is defined.
+# NOTE: request generation snapshot-to-request logic is pending solver DTO definition.
