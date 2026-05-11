@@ -116,6 +116,17 @@ Run a complete simulation from the given configuration.
 
 # Notes
 - Creates a ConcurrentSim simulation, initializes all agents, and starts the batch update process.
+
+# Examples
+```julia
+config = SimulationConfig(
+    start="2022-01-01T00:00:00",
+    duration="PT1H",
+    algorithm="test",
+    scenario="default",
+)
+run_simulation(config)
+```
 """
 function run_simulation(config::SimulationConfig)
     sim = Simulation()

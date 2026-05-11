@@ -269,6 +269,21 @@ Aggregated parameters for all services requested in the optimization.
 - `baseline_stability::BaselineStabilityServiceParameters` — Baseline stability service parameters.
 - `co2::Co2ServiceParameters` — CO2 service parameters.
 - `day_ahead::DayAheadServiceParameters` — Day-ahead market service parameters.
+
+# Examples
+```julia
+# Load from configuration dictionary
+cfg = Dict(
+    "charging_requirements" => Dict("weight" => 1.0, "soc_penalties" => Dict("encouraged_min_soc_gap" => 10, "encouraged_max_soc_gap" => 30, "max_soc_gap" => 50), "instant_charge_penalties" => Dict("max_soc_gap" => 50)),
+    "tariff" => Dict("weight" => 0.5, "discount" => 0.1, "default_price" => 50.0),
+    "fcr" => Dict("fcr_up" => Dict("weight" => 0.3, "parameters" => Dict("base_frequency" => 50.0, "frequency_activation_table" => [], "asymmetric_response_allowed" => false, "minimum_duration_at_full_power" => 60))),
+    "baseline_stability" => Dict("weight" => 0.2),
+    "co2" => Dict("weight" => 0.1),
+    "day_ahead" => Dict("weight" => 0.4, "discount" => 0.05),
+)
+params = load(ServicesRequestParameters, cfg)
+is_fcr_enabled(params)  # true (if fcr weight > 0)
+```
 """
 Base.@kwdef struct ServicesRequestParameters
     charging_requirements::ChargingRequirementsServiceParameters

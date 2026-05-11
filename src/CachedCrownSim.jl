@@ -21,6 +21,7 @@ module CachedCrownSim
 using Dates
 using ConcurrentSim
 using ResumableFunctions
+using StructArrays
 
 # Type alias exports
 export Energy_kWh, Power_kW, Power_W, Ratio, Frequency_Hz, EnergyPrice_MWh, EnergyConsumption_Wh_minute
@@ -97,6 +98,7 @@ include("spot/spot_state.jl")
 include("network/network_state.jl")
 
 # Core simulation infrastructure
+include("simulation/fleet.jl")
 include("simulation/runner.jl")
 
 # Vehicle and EVSE batch update logic
