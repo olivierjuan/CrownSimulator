@@ -250,12 +250,10 @@ end
 end
 
 @testset "SocPowerTable - to_dto" begin
-    table = SocPowerTable(
-        items=[
-            SocPowerTableItem(soc=20, power=7.0),
-            SocPowerTableItem(soc=80, power=22.0),
-        ]
-    )
+    table = SocPowerTable([
+        SocPowerTableItem(soc=20, power=7.0),
+        SocPowerTableItem(soc=80, power=22.0),
+    ])
     dtos = to_dto(table; capacity=60.0)
     @test length(dtos) == 2
     @test dtos[1]["maxChargePower"] == Int(round(7.0 * 1000.0))
@@ -1119,9 +1117,9 @@ end
 end
 
 @testset "ElectricNetworkSnapshot" begin
-    ens = ElectricNetworkSnapshot(frequency=50.0, state=NetworkState.NORMAL)
+    ens = ElectricNetworkSnapshot(frequency=50.0, state=NORMAL)
     @test ens.frequency == 50.0
-    @test ens.state == NetworkState.NORMAL
+    @test ens.state == NORMAL
 end
 
 @testset "SpotSnapshot" begin
@@ -1202,10 +1200,10 @@ end
         sites=SiteSnapshot[],
         evses=EvseSnapshot[],
         vehicles=[vs],
-        recovering_state=RecoveringMode.DEACTIVATED,
+        recovering_state=DEACTIVATED,
     )
     @test ves.timestamp == DateTime(2022,1,1)
-    @test ves.recovering_state == RecoveringMode.DEACTIVATED
+    @test ves.recovering_state == DEACTIVATED
     @test ves.announced_capacity === nothing
     @test ves.network === nothing
     @test ves.spot === nothing
@@ -1673,11 +1671,11 @@ end
     nsc = NetworkStateContainer("net_1")
     @test nsc.id_ == "net_1"
     @test nsc.frequency == 50.0
-    @test nsc.state == NetworkState.NORMAL
+    @test nsc.state == NORMAL
 end
 
 @testset "NetworkStateContainer - full constructor" begin
-    nsc = NetworkStateContainer("net_1", 49.9, NetworkState.ALERT)
+    nsc = NetworkStateContainer("net_1", 49.9, ALERT)
     @test nsc.id_ == "net_1"
     @test nsc.frequency == 49.9
     @test nsc.state == NetworkState.ALERT
@@ -1763,7 +1761,7 @@ end
 end
 
 @testset "SocPowerTable - empty" begin
-    table = SocPowerTable(items=SocPowerTableItem[])
+    table = SocPowerTable(SocPowerTableItem[])
     dtos = to_dto(table; capacity=60.0)
     @test isempty(dtos)
 end
