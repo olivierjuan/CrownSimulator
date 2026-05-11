@@ -78,26 +78,79 @@ function snapshot(agent::AbstractAgent)
     error("snapshot not implemented for $(typeof(agent))")
 end
 
+"""
+    EvseAgentRegistration
+
+Registration record for an EVSE agent in the simulation.
+
+# Fields
+- `id_::EvseId` — Identifier of the registered EVSE.
+"""
 struct EvseAgentRegistration
     id_::EvseId
 end
 
+"""
+    VehicleAgentRegistration
+
+Registration record for a vehicle agent in the simulation.
+
+# Fields
+- `id_::VehicleId` — Identifier of the registered vehicle.
+"""
 struct VehicleAgentRegistration
     id_::VehicleId
 end
 
+"""
+    SiteAgentRegistration
+
+Registration record for a site agent in the simulation.
+
+# Fields
+- `id_::SiteId` — Identifier of the registered site.
+"""
 struct SiteAgentRegistration
     id_::SiteId
 end
 
+"""
+    NetworkAgentRegistration
+
+Registration record for a network agent in the simulation.
+
+# Fields
+- `id::String` — Identifier of the registered network.
+"""
 struct NetworkAgentRegistration
     id_::String
 end
 
+"""
+    SpotAgentRegistration
+
+Registration record for a spot market agent in the simulation.
+
+# Fields
+- `id_::SpotMarketAccessId` — Identifier of the registered spot market access.
+"""
 struct SpotAgentRegistration
     id_::SpotMarketAccessId
 end
 
+"""
+    EvseSetDataRequest
+
+Request to set data on an EVSE agent. All fields are optional.
+
+# Fields
+- `baseline::Union{Power_kW,Nothing}` — Baseline power in kW.
+- `power::Union{Power_kW,Nothing}` — Power setpoint in kW.
+- `primary_activated::Union{Int,Nothing}` — Primary activated capacity.
+- `primary_capacity::Union{Int,Nothing}` — Primary capacity.
+- `primary_capacity_up::Union{Int,Nothing}` — Primary capacity up.
+- `primary_capacity_down::Union{Int,Nothing}` — Primary capacity down.
+"""
 Base.@kwdef struct EvseSetDataRequest
     baseline::Union{Power_kW,Nothing} = nothing
     power::Union{Power_kW,Nothing} = nothing
@@ -107,10 +160,27 @@ Base.@kwdef struct EvseSetDataRequest
     primary_capacity_down::Union{Int,Nothing} = nothing
 end
 
+"""
+    VehicleSetDataRequest
+
+Request to set data on a vehicle agent. All fields are optional.
+
+# Fields
+- `power::Union{Power_kW,Nothing}` — Power setpoint in kW.
+"""
 Base.@kwdef struct VehicleSetDataRequest
     power::Union{Power_kW,Nothing} = nothing
 end
 
+"""
+    TimestampedVehicleSoc
+
+A timestamped state of charge measurement for a vehicle.
+
+# Fields
+- `timestamp::DateTime` — Time of the measurement.
+- `value::Energy_kWh` — State of charge in kWh.
+"""
 struct TimestampedVehicleSoc
     timestamp::DateTime
     value::Energy_kWh

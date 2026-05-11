@@ -33,7 +33,7 @@ export ServicesRequestParameters, SocPenalties, InstantChargePenalties, Charging
 export CurrentType, EvseModel
 export VehicleModel
 export VehicleTrip, FutureTransactionSeed
-export DeliveryPoint, DeliveryPointCircuit, CircuitEvse, CircuitPowerLimits, OtherConsumption, OtherProduction
+export DeliveryPoint, DeliveryPointCircuit, CircuitEvse, CircuitPowerLimits, OtherLoad, OtherConsumption, OtherProduction
 export EvseAgentRegistration, VehicleAgentRegistration, SiteAgentRegistration, NetworkAgentRegistration, SpotAgentRegistration
 export EvseSetDataRequest, VehicleSetDataRequest, TimestampedVehicleSoc
 export FcrSummary, Transaction, OptimizationResponseSummary, AbstractCapacityRequirement
@@ -75,6 +75,10 @@ include("vehicle/vehicle_state.jl")
 include("evse/evse_state.jl")
 include("site/site_state.jl")
 
+# Network / spot state (must be before runner.jl)
+include("spot/spot_state.jl")
+include("network/network_state.jl")
+
 # Core simulation infrastructure
 include("simulation/runner.jl")
 
@@ -92,10 +96,6 @@ include("scenarios/bidding_service.jl")
 # Aggregator infrastructure
 include("aggregator/droop_controller.jl")
 include("aggregator/aggregator.jl")
-
-# Network / spot state
-include("spot/spot_state.jl")
-include("network/network_state.jl")
 
 # Optimization placeholder
 include("optimization/optimizer.jl")

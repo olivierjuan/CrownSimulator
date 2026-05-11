@@ -1,4 +1,13 @@
 """
+    OtherLoad
+
+Common abstract type for non-EVSE loads on a delivery point circuit
+(consumption or production). Both `OtherConsumption` and `OtherProduction`
+share identical fields and serialization logic.
+"""
+abstract type OtherLoad end
+
+"""
     OtherConsumption
 
 Represents a non-EV electrical load on a delivery point circuit, such as lighting or HVAC.
@@ -11,31 +20,13 @@ Represents a non-EV electrical load on a delivery point circuit, such as lightin
 - `installed_on_phase::String` — Specific phase where the load is connected.
 - `power::Power_W` — Power consumption in watts.
 """
-Base.@kwdef struct OtherConsumption
+Base.@kwdef struct OtherConsumption <: OtherLoad
     circuit_id::String
     from::DateTime
     to::DateTime
     phases::String
     installed_on_phase::String
     power::Power_W
-end
-
-"""
-    to_dto(oc::OtherConsumption) -> Dict{String,Any}
-
-Convert an `OtherConsumption` to a DTO dictionary for serialization.
-"""
-function to_dto(oc::OtherConsumption)
-    Dict{String,Any}(
-        "phases" => oc.phases,
-        "installedOnPhase" => oc.installed_on_phase,
-        "schedule" => [
-            Dict{String,Any}(
-                "period" => Dict("from" => oc.from, "to" => oc.to),
-                "power" => Int(round(oc.power)),
-            ),
-        ],
-    )
 end
 
 """
@@ -51,7 +42,7 @@ Represents electrical production on a delivery point circuit, such as solar PV o
 - `installed_on_phase::String` — Specific phase where the production is connected.
 - `power::Power_W` — Power production in watts.
 """
-Base.@kwdef struct OtherProduction
+Base.@kwdef struct OtherProduction <: OtherLoad
     circuit_id::String
     from::DateTime
     to::DateTime
@@ -61,18 +52,18 @@ Base.@kwdef struct OtherProduction
 end
 
 """
-    to_dto(op::OtherProduction) -> Dict{String,Any}
+    to_dto(ol::OtherLoad) -> Dict{String,Any}
 
-Convert an `OtherProduction` to a DTO dictionary for serialization.
+Convert an `OtherLoad` (consumption or production) to a DTO dictionary for serialization.
 """
-function to_dto(op::OtherProduction)
+function to_dto(ol::OtherLoad)
     Dict{String,Any}(
-        "phases" => op.phases,
-        "installedOnPhase" => op.installed_on_phase,
+        "phases" => ol.phases,
+        "installedOnPhase" => ol.installed_on_phase,
         "schedule" => [
             Dict{String,Any}(
-                "period" => Dict("from" => op.from, "to" => op.to),
-                "power" => Int(round(op.power)),
+                "period" => Dict("from" => ol.from, "to" => ol.to),
+                "power" => Int(round(ol.power)),
             ),
         ],
     )

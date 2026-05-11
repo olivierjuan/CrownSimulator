@@ -300,6 +300,55 @@ function load(::Type{ServicesRequestParameters}, cfg::AbstractDict)
 end
 
 """
+    to_dto(params::FcrServiceParameters) -> Dict{String,Any}
+
+Convert `FcrServiceParameters` to a DTO dictionary for serialization.
+"""
+function to_dto(params::FcrServiceParameters)
+    Dict{String,Any}(
+        "weight" => params.weight,
+        "parameters" => to_dto(params.parameters),
+    )
+end
+
+"""
+    to_dto(params::BaselineStabilityServiceParameters) -> Dict{String,Any}
+
+Convert `BaselineStabilityServiceParameters` to a DTO dictionary for serialization.
+"""
+function to_dto(params::BaselineStabilityServiceParameters)
+    Dict{String,Any}("weight" => params.weight)
+end
+
+"""
+    to_dto(params::DayAheadServiceParameters) -> Dict{String,Any}
+
+Convert `DayAheadServiceParameters` to a DTO dictionary for serialization.
+"""
+function to_dto(params::DayAheadServiceParameters)
+    Dict{String,Any}(
+        "weight" => params.weight,
+        "discount" => params.discount,
+    )
+end
+
+"""
+    to_dto(params::ServicesRequestParameters) -> Dict{String,Any}
+
+Convert `ServicesRequestParameters` to a DTO dictionary for serialization.
+"""
+function to_dto(params::ServicesRequestParameters)
+    Dict{String,Any}(
+        "chargingRequirements" => to_dto(params.charging_requirements),
+        "tariff" => to_dto(params.tariff),
+        "fcr" => Dict(k => to_dto(v) for (k, v) in params.fcr),
+        "baselineStability" => to_dto(params.baseline_stability),
+        "co2" => to_dto(params.co2),
+        "dayAhead" => to_dto(params.day_ahead),
+    )
+end
+
+"""
     is_fcr_enabled(params::ServicesRequestParameters) -> Bool
 
 Check whether any FCR (Frequency Containment Reserve) service is enabled.
