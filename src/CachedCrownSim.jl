@@ -55,6 +55,9 @@ export SimulationConfig, OutputConfig, DatapointsOutputConfig
 export SimulationState, run_simulation
 export validate_config, merge_defaults
 export EnergyNeed, OtherLoad, OptimizationRequestGenerator
+export VehicleFleet, batch_soc_update!
+export PluginInterface, MobilityPlugin, OptimizationPlugin, SpotPlugin, NetworkPlugin
+export PluginManager, register_plugin!, setup!, step!, teardown!, setup_all!, step_all!, teardown_all!
 
 # Function exports
 export to_dto, load, from_config, from_dto, read_from_csv
@@ -99,6 +102,7 @@ include("network/network_state.jl")
 
 # Core simulation infrastructure
 include("simulation/fleet.jl")
+include("simulation/plugins.jl")
 include("simulation/runner.jl")
 
 # Vehicle and EVSE batch update logic
