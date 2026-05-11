@@ -1196,7 +1196,7 @@ end
     )
     ves = VirtualEnvironmentSnapshot(
         timestamp=DateTime(2022,1,1),
-        horizon=OptimizationHorizon(start=DateTime(2022,1,1), stop=DateTime(2022,1,2), period_duration=Hour(1)),
+        horizon=OptimizationHorizon(DateTime(2022,1,1), DateTime(2022,1,2), Hour(1)),
         sites=SiteSnapshot[],
         evses=EvseSnapshot[],
         vehicles=[vs],
