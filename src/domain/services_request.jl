@@ -20,6 +20,9 @@ end
 Construct `SocPenalties` from a configuration dictionary.
 """
 function load(::Type{SocPenalties}, cfg::AbstractDict)
+    for key in ("encouraged_min_soc_gap", "encouraged_max_soc_gap", "max_soc_gap")
+        haskey(cfg, key) || throw(ArgumentError("Missing required key '$key' in SocPenalties config"))
+    end
     SocPenalties(
         encouraged_min_soc_gap=cfg["encouraged_min_soc_gap"],
         encouraged_max_soc_gap=cfg["encouraged_max_soc_gap"],
@@ -58,6 +61,7 @@ end
 Construct `InstantChargePenalties` from a configuration dictionary.
 """
 function load(::Type{InstantChargePenalties}, cfg::AbstractDict)
+    haskey(cfg, "max_soc_gap") || throw(ArgumentError("Missing required key 'max_soc_gap' in InstantChargePenalties config"))
     InstantChargePenalties(max_soc_gap=cfg["max_soc_gap"])
 end
 

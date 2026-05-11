@@ -1,11 +1,4 @@
 """
-    AbstractPlugin
-
-Abstract supertype for vehicle mobility events (plugin and plugout).
-"""
-abstract type AbstractPlugin end
-
-"""
     Plugin
 
 Represents a vehicle plug-in event (vehicle arrives and connects to an EVSE).
