@@ -1,3 +1,16 @@
+"""
+    OtherConsumption
+
+Represents a non-EV electrical load on a delivery point circuit, such as lighting or HVAC.
+
+# Fields
+- `circuit_id::String` — Identifier of the circuit where this load is installed.
+- `from::DateTime` — Start time of the consumption schedule.
+- `to::DateTime` — End time of the consumption schedule.
+- `phases::String` — Phases on which the load is installed.
+- `installed_on_phase::String` — Specific phase where the load is connected.
+- `power::Power_W` — Power consumption in watts.
+"""
 Base.@kwdef struct OtherConsumption
     circuit_id::String
     from::DateTime
@@ -7,6 +20,11 @@ Base.@kwdef struct OtherConsumption
     power::Power_W
 end
 
+"""
+    to_dto(oc::OtherConsumption) -> Dict{String,Any}
+
+Convert an `OtherConsumption` to a DTO dictionary for serialization.
+"""
 function to_dto(oc::OtherConsumption)
     Dict{String,Any}(
         "phases" => oc.phases,
@@ -20,6 +38,19 @@ function to_dto(oc::OtherConsumption)
     )
 end
 
+"""
+    OtherProduction
+
+Represents electrical production on a delivery point circuit, such as solar PV or battery.
+
+# Fields
+- `circuit_id::String` — Identifier of the circuit where this production is installed.
+- `from::DateTime` — Start time of the production schedule.
+- `to::DateTime` — End time of the production schedule.
+- `phases::String` — Phases on which the production is installed.
+- `installed_on_phase::String` — Specific phase where the production is connected.
+- `power::Power_W` — Power production in watts.
+"""
 Base.@kwdef struct OtherProduction
     circuit_id::String
     from::DateTime
@@ -29,6 +60,11 @@ Base.@kwdef struct OtherProduction
     power::Power_W
 end
 
+"""
+    to_dto(op::OtherProduction) -> Dict{String,Any}
+
+Convert an `OtherProduction` to a DTO dictionary for serialization.
+"""
 function to_dto(op::OtherProduction)
     Dict{String,Any}(
         "phases" => op.phases,
@@ -42,6 +78,17 @@ function to_dto(op::OtherProduction)
     )
 end
 
+"""
+    CircuitEvse
+
+Represents an EVSE (Electric Vehicle Supply Equipment) connected to a delivery point circuit.
+
+# Fields
+- `evse_id::String` — Unique identifier of the EVSE.
+- `phases::String` — Phases on which the EVSE is installed.
+- `installed_on_phase::String` — Specific phase where the EVSE is connected.
+- `priority::Int` — Priority of the EVSE for load balancing (default: 0).
+"""
 Base.@kwdef struct CircuitEvse
     evse_id::String
     phases::String
@@ -49,6 +96,14 @@ Base.@kwdef struct CircuitEvse
     priority::Int = 0
 end
 
+"""
+    load(::Type{CircuitEvse}, dto::AbstractDict) -> CircuitEvse
+
+Construct a `CircuitEvse` from a DTO dictionary.
+
+# Arguments
+- `dto::AbstractDict` — Dictionary with keys `"evseId"`, `"phases"`, `"installedOnPhase"`, and optionally `"priority"`.
+"""
 function load(::Type{CircuitEvse}, dto::AbstractDict)
     CircuitEvse(
         evse_id=dto["evseId"],
@@ -58,6 +113,11 @@ function load(::Type{CircuitEvse}, dto::AbstractDict)
     )
 end
 
+"""
+    to_dto(evse::CircuitEvse) -> Dict{String,Any}
+
+Convert a `CircuitEvse` to a DTO dictionary for serialization.
+"""
 function to_dto(evse::CircuitEvse)
     Dict{String,Any}(
         "evseId" => evse.evse_id,
@@ -67,17 +127,39 @@ function to_dto(evse::CircuitEvse)
     )
 end
 
+"""
+    CircuitPowerLimits
+
+Power limits for a delivery point circuit, defining maximum charge and discharge power.
+
+# Fields
+- `max_charge_power::Union{Power_kW,Nothing}` — Maximum charge power in kW (may be `nothing` if unspecified).
+- `max_discharge_power::Union{Power_kW,Nothing}` — Maximum discharge power in kW (may be `nothing` if unspecified).
+"""
 Base.@kwdef struct CircuitPowerLimits
     max_charge_power::Union{Power_kW,Nothing}
     max_discharge_power::Union{Power_kW,Nothing}
 end
 
+"""
+    load(::Type{CircuitPowerLimits}, dto::AbstractDict) -> CircuitPowerLimits
+
+Construct a `CircuitPowerLimits` from a DTO dictionary. Power values are converted from watts to kilowatts.
+
+# Arguments
+- `dto::AbstractDict` — Dictionary with optional keys `"maxChargePower"` and `"maxDischargePower"` (in watts).
+"""
 function load(::Type{CircuitPowerLimits}, dto::AbstractDict)
     max_charge_power = haskey(dto, "maxChargePower") ? dto["maxChargePower"] / 1000.0 : nothing
     max_discharge_power = haskey(dto, "maxDischargePower") ? dto["maxDischargePower"] / 1000.0 : nothing
     CircuitPowerLimits(max_charge_power=max_charge_power, max_discharge_power=max_discharge_power)
 end
 
+"""
+    to_dto(limits::CircuitPowerLimits) -> Dict{String,Any}
+
+Convert a `CircuitPowerLimits` to a DTO dictionary for serialization. Power values are converted from kilowatts to watts.
+"""
 function to_dto(limits::CircuitPowerLimits)
     dto = Dict{String,Any}()
     if limits.max_charge_power !== nothing
@@ -89,6 +171,21 @@ function to_dto(limits::CircuitPowerLimits)
     return dto
 end
 
+"""
+    DeliveryPointCircuit
+
+Represents a circuit within a delivery point, with sub-circuits, EVSEs, and power limits.
+
+# Fields
+- `id_::String` — Unique identifier of the circuit.
+- `phases::String` — Phases on which the circuit is installed.
+- `installed_on_phase::String` — Specific phase where the circuit is connected.
+- `circuits::Vector{DeliveryPointCircuit}` — Sub-circuits nested within this circuit.
+- `evses::Vector{CircuitEvse}` — EVSEs connected to this circuit.
+- `other_consumptions::Vector{OtherConsumption}` — Non-EV loads on this circuit.
+- `other_productions::Vector{OtherProduction}` — Power production sources on this circuit.
+- `power_limits::Union{CircuitPowerLimits,Nothing}` — Optional power limits for this circuit.
+"""
 Base.@kwdef struct DeliveryPointCircuit
     id_::String
     phases::String
@@ -100,6 +197,14 @@ Base.@kwdef struct DeliveryPointCircuit
     power_limits::Union{CircuitPowerLimits,Nothing} = nothing
 end
 
+"""
+    load(::Type{DeliveryPointCircuit}, dto::AbstractDict) -> DeliveryPointCircuit
+
+Construct a `DeliveryPointCircuit` from a DTO dictionary, including nested circuits and EVSEs.
+
+# Arguments
+- `dto::AbstractDict` — Dictionary with keys `"id"`, `"phases"`, `"installedOnPhase"`, and optionally `"circuits"`, `"evses"`, `"powerLimits"`.
+"""
 function load(::Type{DeliveryPointCircuit}, dto::AbstractDict)
     power_limits = if haskey(dto, "powerLimits") && !isempty(dto["powerLimits"])
         load(CircuitPowerLimits, dto["powerLimits"])
@@ -128,6 +233,11 @@ function load(::Type{DeliveryPointCircuit}, dto::AbstractDict)
     )
 end
 
+"""
+    to_dto(circuit::DeliveryPointCircuit) -> Dict{String,Any}
+
+Convert a `DeliveryPointCircuit` to a DTO dictionary for serialization, including nested circuits and EVSEs.
+"""
 function to_dto(circuit::DeliveryPointCircuit)
     Dict{String,Any}(
         "id" => circuit.id_,
@@ -141,6 +251,20 @@ function to_dto(circuit::DeliveryPointCircuit)
     )
 end
 
+"""
+    DeliveryPoint
+
+Represents a physical delivery point (e.g., a site) with circuits, EVSEs, and power limits.
+
+# Fields
+- `id_::String` — Unique identifier of the delivery point.
+- `phases::String` — Phases on which the delivery point is installed.
+- `power_limits::CircuitPowerLimits` — Power limits for this delivery point.
+- `circuits::Vector{DeliveryPointCircuit}` — Circuits within this delivery point.
+- `other_consumptions::Vector{OtherConsumption}` — Non-EV loads on this delivery point.
+- `other_productions::Vector{OtherProduction}` — Power production sources on this delivery point.
+- `subscribed_power::Union{CircuitPowerLimits,Nothing}` — Optional subscribed power limits.
+"""
 Base.@kwdef struct DeliveryPoint
     id_::String
     phases::String
@@ -151,6 +275,14 @@ Base.@kwdef struct DeliveryPoint
     subscribed_power::Union{CircuitPowerLimits,Nothing} = nothing
 end
 
+"""
+    load(::Type{DeliveryPoint}, dto::AbstractDict) -> DeliveryPoint
+
+Construct a `DeliveryPoint` from a DTO dictionary, including nested circuits and power limits.
+
+# Arguments
+- `dto::AbstractDict` — Dictionary with keys `"id"`, `"phases"`, `"powerLimits"`, `"circuits"`, and optionally `"subscribedPower"`.
+"""
 function load(::Type{DeliveryPoint}, dto::AbstractDict)
     subscribed_power = haskey(dto, "subscribedPower") ? load(CircuitPowerLimits, dto["subscribedPower"]) : nothing
     DeliveryPoint(
@@ -164,6 +296,11 @@ function load(::Type{DeliveryPoint}, dto::AbstractDict)
     )
 end
 
+"""
+    to_dto(dp::DeliveryPoint) -> Dict{String,Any}
+
+Convert a `DeliveryPoint` to a DTO dictionary for serialization, including circuits and power limits.
+"""
 function to_dto(dp::DeliveryPoint)
     dto = Dict{String,Any}(
         "id" => dp.id_,

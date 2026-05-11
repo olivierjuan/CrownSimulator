@@ -15,10 +15,10 @@ function from_config(::Type{VehicleModel}, cfg::AbstractDict)::VehicleModel
     power_losses = nothing
     soc_power_table = nothing
     max_charge_power_max_soc = 0.0
-    if haskey("max_charge_power_max_soc", cfg)
+    if haskey(cfg, "max_charge_power_max_soc")
         max_charge_power_max_soc = cfg["max_charge_power_max_soc"] / 100.0
     end
-    if haskey("standby_losses", cfg) && haskey("variable_losses", cfg)
+    if haskey(cfg, "standby_losses") && haskey(cfg, "variable_losses")
         power_losses = PowerLosses(
             standby=cfg["standby_losses"],
             variable=VariablePowerLosses(
@@ -27,7 +27,7 @@ function from_config(::Type{VehicleModel}, cfg::AbstractDict)::VehicleModel
             ),
         )
     end
-    if haskey("soc_power_table", cfg)
+    if haskey(cfg, "soc_power_table")
         soc_power_table = from_config(SocPowerTable, cfg["soc_power_table"])
     end
     VehicleModel(

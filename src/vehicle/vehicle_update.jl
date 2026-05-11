@@ -11,6 +11,13 @@ function compute_vehicle_soc_update(
     new_soc
 end
 
+function update!(v::VehicleState, dt::Float64, current_time::DateTime)
+    if v.connected
+        v.previous_soc = v.soc
+        v.soc = compute_vehicle_soc_update(v, v.power, v.noise, dt)
+    end
+end
+
 function batch_vehicle_soc_update!(vehicles::Vector{VehicleState}, delta_t::Float64)
     for i in eachindex(vehicles)
         v = vehicles[i]

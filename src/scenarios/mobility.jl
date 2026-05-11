@@ -21,7 +21,12 @@ end
 function from_dto(::Type{Mobility}, dto_vector)
     events = Union{Plugin,Plugout}[]
     for event in dto_vector
-        push!(events, Plugin(event["at"], event["time"]))
+        event_type = get(event, "type", "plugin")
+        if event_type == "plugout"
+            push!(events, Plugout(event["at"], event["time"], get(event, "evse_id", nothing)))
+        else
+            push!(events, Plugin(event["at"], event["time"], get(event, "soc", nothing), get(event, "evse_id", nothing)))
+        end
     end
     Mobility(events, 1)
 end

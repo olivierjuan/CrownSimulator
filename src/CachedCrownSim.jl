@@ -1,3 +1,21 @@
+"""
+    CachedCrownSim
+
+A Julia module for simulating EV (Electric Vehicle) charging with cached crown optimisation.
+
+This module implements a discrete-event simulation of EV charging stations using
+ConcurrentSim.jl. It models vehicles, EVSEs (Electric Vehicle Supply Equipment),
+sites, networks, and spot markets. The simulation includes:
+
+- Domain types for power, energy, timestamps, vehicles, and EVSEs
+- Optimisation framework with external solver support
+- Frequency Containment Reserve (FCR) and droop control
+- Mobility scenarios with plug-in/plug-out events
+- Bidding and capacity requirement services
+- CSV/JSON I/O for data exchange
+
+The module is designed to be used as part of a larger EV charging management system.
+"""
 module CachedCrownSim
 
 using Dates
@@ -27,6 +45,10 @@ export Aggregator
 export SpotState, NetworkStateContainer
 export SimulationConfig, OutputConfig, DatapointsOutputConfig
 export SimulationState, run_simulation
+
+# Abstract agent interface exports
+export AbstractAgent, AbstractVehicleAgent, AbstractEvseAgent, AbstractSiteAgent, AbstractNetworkAgent, AbstractSpotAgent
+export register!, initialize, update!, snapshot
 
 # Domain definitions
 include("domain/timestamps.jl")
