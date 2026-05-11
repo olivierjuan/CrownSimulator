@@ -13,9 +13,9 @@
 |--------|--------|-------|
 | Source lines | 2033 | 4048 |
 | Test lines | 50 | 1836 |
-| Tests | 11 | 416 |
-| Test sets | 5 | ~150 |
-| Commits | 1 | 16 |
+| Tests | 11 | 650 |
+| Test sets | 5 | ~180 |
+| Commits | 1 | 20 |
 | Docstrings | Partial | All public functions/structs |
 
 ---
@@ -48,10 +48,10 @@
 **Objective**: Increase test coverage from 11 basic tests to comprehensive suite
 
 ### Results
-- **588 tests** across 20 test files (up from 11)
+- **650 tests** across 20 test files (up from 11)
 - Test suite split into 20 subfiles in test/testfiles/
 - Covers all domain types, agents, simulation, edge cases, and integration tests
-- Additional edge cases: PowerLimits cross_max, get_useful_power error paths, SocPowerTable lookup, TimeRange intersection/containment, VehicleState with losses, SimulationState integration
+- Additional edge cases: PowerLimits cross_max, get_useful_power error paths, SocPowerTable lookup, TimeRange intersection/containment, VehicleState with losses, SimulationState integration, service parameters, EvseModel DC, VehicleModel optional fields
 
 ### Test Coverage
 - TimeRange (intersection, in, generate_periods, generate_timepoints)

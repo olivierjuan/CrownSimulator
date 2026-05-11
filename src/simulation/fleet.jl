@@ -119,10 +119,10 @@ Uses StructArray for cache-friendly iteration.
 """
 function batch_soc_update!(fleet::VehicleFleet, delta_t::Float64)
     for i in eachindex(fleet.vehicles)
-        v = fleet.vehicles[i]
-        if v.connected
-            v.previous_soc = v.soc
-            v.soc = compute_vehicle_soc_update(v, v.power, v.noise, delta_t)
+        if fleet.vehicles.connected[i]
+            new_soc = compute_vehicle_soc_update(fleet.vehicles[i], fleet.vehicles.power[i], fleet.vehicles.noise[i], delta_t)
+            fleet.vehicles.previous_soc[i] = fleet.vehicles.soc[i]
+            fleet.vehicles.soc[i] = new_soc
         end
     end
 end
