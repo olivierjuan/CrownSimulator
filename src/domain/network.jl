@@ -94,6 +94,16 @@ A table of frequency-to-activation mappings for FCR (Frequency Containment Reser
 
 # Fields
 - `mappings::Vector{FrequencyActivationMapping}` — Ordered list of frequency activation mappings.
+
+# Examples
+```julia
+table = FrequencyActivationTable(mappings=[
+    FrequencyActivationMapping(frequency=49.8, activation=-1.0),
+    FrequencyActivationMapping(frequency=50.0, activation=0.0),
+    FrequencyActivationMapping(frequency=50.2, activation=1.0),
+])
+dz = dead_zone(table)  # FrequencyRange(up=50.0, down=50.0)
+```
 """
 Base.@kwdef struct FrequencyActivationTable
     mappings::Vector{FrequencyActivationMapping}
@@ -171,6 +181,21 @@ Parameters defining the frequency quality requirements for FCR services.
 - `frequency_activation_table::FrequencyActivationTable` — Table of frequency activation mappings.
 - `asymmetric_response_allowed::Bool` — Whether asymmetric frequency response is allowed.
 - `minimum_duration_at_full_power::Dates.Period` — Minimum duration at full power.
+
+# Examples
+```julia
+table = FrequencyActivationTable(mappings=[
+    FrequencyActivationMapping(frequency=49.8, activation=-1.0),
+    FrequencyActivationMapping(frequency=50.0, activation=0.0),
+    FrequencyActivationMapping(frequency=50.2, activation=1.0),
+])
+params = FrequencyQualityDefiningParams(
+    base_frequency=50.0,
+    frequency_activation_table=table,
+    asymmetric_response_allowed=false,
+    minimum_duration_at_full_power=Dates.Minute(1),
+)
+```
 """
 Base.@kwdef struct FrequencyQualityDefiningParams
     base_frequency::Frequency_Hz

@@ -79,6 +79,13 @@ Power limits for an EVSE or vehicle, defining charge/discharge power boundaries.
 - `max_discharge_power::Power_kW` — Maximum discharge power in kW (default: 0.0).
 - `efficiency_min_discharge_power::Power_kW` — Minimum discharge power for efficiency (default: 0.0).
 - `efficiency_min_charge_power::Power_kW` — Minimum charge power for efficiency (default: 0.0).
+
+# Examples
+```julia
+limits = PowerLimits(max_charge_power=22.0, min_charge_power=1.0, max_discharge_power=10.0)
+limits.max_charge_power  # 22.0
+limits.max_discharge_power  # 10.0
+```
 """
 Base.@kwdef struct PowerLimits
     max_charge_power::Power_kW
@@ -102,6 +109,14 @@ Returns a new `PowerLimits` with `max_charge_power` capped to `ev_power_max` and
 
 # Returns
 - A new `PowerLimits` with the crossed charge limits.
+
+# Examples
+```julia
+evse_limits = PowerLimits(max_charge_power=22.0, min_charge_power=1.0)
+crossed = cross_max_and_min_charge_power(evse_limits, 11.0, 0.0)
+crossed.max_charge_power  # 11.0 (vehicle's max is lower)
+crossed.min_charge_power  # 1.0 (EVSE's min is higher)
+```
 """
 function cross_max_and_min_charge_power(
     self::PowerLimits,
@@ -182,6 +197,16 @@ Includes an internal cache for fast lookups.
 # Fields
 - `items::Vector{SocPowerTableItem}` — Ordered list of SoC power table entries.
 - `_cache::Dict{Int,Power_kW}` — Cached SoC-to-power mapping for fast lookups.
+
+# Examples
+```julia
+table = SocPowerTable([
+    SocPowerTableItem(soc=20, power=7.0),
+    SocPowerTableItem(soc=80, power=22.0),
+])
+lookup_power(table, 50)  # 7.0 (falls back to nearest lower SoC entry)
+lookup_power(table, 80)  # 22.0 (exact match)
+```
 """
 struct SocPowerTable
     items::Vector{SocPowerTableItem}

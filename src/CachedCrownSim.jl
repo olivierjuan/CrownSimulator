@@ -53,6 +53,7 @@ export VehicleState, EvseState, SiteState
 export SimulationConfig, OutputConfig, DatapointsOutputConfig
 export SimulationState, run_simulation
 export validate_config, merge_defaults
+export EnergyNeed, OtherLoad, OptimizationRequestGenerator
 
 # Function exports
 export to_dto, load, from_config, from_dto, read_from_csv
